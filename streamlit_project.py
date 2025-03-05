@@ -1,9 +1,3 @@
-import streamlit as st
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 st.title("Prévision du succès d'un film")
 
 st.sidebar.title("Sommaire")
