@@ -45,6 +45,8 @@ elif page == pages[1]:
 
     # Popularité moyenne des films par mois de sortie
   
+    df_exploration['release_date'] = pd.to_datetime(df_exploration['release_date'], errors='coerce')
+  
     df_exploration['release_month'] = df_exploration['release_date'].dt.month
       
     pop_by_month = df_exploration.groupby('release_month')['popularity'].mean()
