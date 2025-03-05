@@ -43,6 +43,10 @@ elif page == pages[1]:
     
     st.write(df_exploration.shape)
 
+    st.write("Informations sur le dataframe :")
+    
+    st.write(df_exploration.info())
+
     # Popularité moyenne des films par mois de sortie
 
     if 'release_month' not in df_exploration.columns:
