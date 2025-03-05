@@ -16,7 +16,7 @@ st.title("Prévision du succès d'un film")
 
 st.sidebar.title("Sommaire")
 
-pages=["Présentation du projet", "Exploration du Dataset et DataViz'", "Préprocessing", "Modélisation", "Machine Learning", "Conclusion"]
+pages=["Présentation du projet", "Exploration du Dataset et DataViz'", "Pré-processing", "Modélisation et Machine Learning", "Conclusion"]
 
 page=st.sidebar.radio("Aller vers", pages)
 
@@ -31,3 +31,21 @@ if page == pages[0]:
   st.write("### Problématique")
   
   st.write("Quels sont les éléments clés qui influencent le succès d’un film ? Peut-on prédire ce succès à partir des données disponibles ?")
+
+elif page == pages[1]:
+    st.write("### Exploration du Dataset et DataViz'")
+
+# A COMPLETER
+
+elif page == pages[2]:
+    st.write("### Pré-processing")
+
+# A COMPLETER
+
+elif page == pages[3]:
+    st.write("### Modélisation et Machine Learning")
+
+# A COMPLETER
+
+elif page == pages[4]:
+    st.write("### Conclusion")
