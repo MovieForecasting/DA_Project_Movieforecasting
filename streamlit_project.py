@@ -16,7 +16,7 @@ st.title("Prévision du succès d'un film")
 
 st.sidebar.title("Sommaire")
 
-pages=["Présentation du projet", "Exploration du Dataset et DataViz'", "Préprocessing", "Modélisation", "Machine Learning", "Conclusion"]
+pages=["Présentation du projet", "Exploration du Dataset et DataViz'", "Préprocessing", "Modélisation", "Machine Learning", "Conclusion", "Tests"]
 
 page=st.sidebar.radio("Aller vers", pages)
 
