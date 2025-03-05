@@ -14,10 +14,6 @@ from sklearn.metrics import r2_score
 
 df_exploration = pd.read_csv("df_github.csv")
 
-df = pd.read_csv("df_github.csv")
-df['release_date'] = pd.to_datetime(df_exploration['release_date'], errors='coerce')
-df['release_month'] = df_exploration['release_date'].dt.month
-
 st.title("Prévision du succès d'un film")
 
 st.sidebar.title("Sommaire")
@@ -47,25 +43,6 @@ elif page == pages[1]:
     
     st.write(df_exploration.shape)
 
-    # Popularité moyenne des films par mois de sortie
-    
-    pop_by_month = df.groupby('release_month')['popularity'].mean()
-      
-    plt.figure(figsize=(10,6))
-    plt.plot(pop_by_month.index, pop_by_month.values, marker='o', linestyle='-', color='orange')
-      
-    # Mettre en avant les mois clés
-      
-    highlight_months = [7, 12]
-    for month in highlight_months:
-      plt.scatter(month, pop_by_month[month], color="red", s=100, zorder=3)
-
-    plt.xlabel('Mois')
-    plt.ylabel('Popularité moyenne')
-    plt.title('Popularité moyenne des films par mois de sortie')
-    plt.xticks(ticks=range(1, 13), labels=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
-    plt.grid(True)
-    plt.show()
 
 # A COMPLETER
 
