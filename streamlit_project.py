@@ -14,6 +14,10 @@ from sklearn.metrics import r2_score
 
 df_exploration = pd.read_csv("df_github.csv")
 
+df = pd.read_csv("df_github.csv")
+df['release_date'] = pd.to_datetime(df_exploration['release_date'], errors='coerce')
+df['release_month'] = df_exploration['release_date'].dt.month
+
 st.title("Prévision du succès d'un film")
 
 st.sidebar.title("Sommaire")
@@ -44,12 +48,8 @@ elif page == pages[1]:
     st.write(df_exploration.shape)
 
     # Popularité moyenne des films par mois de sortie
-  
-    df_exploration['release_date'] = pd.to_datetime(df_exploration['release_date'], errors='coerce')
-  
-    df_exploration['release_month'] = df_exploration['release_date'].dt.month
-      
-    pop_by_month = df_exploration.groupby('release_month')['popularity'].mean()
+    
+    pop_by_month = df.groupby('release_month')['popularity'].mean()
       
     plt.figure(figsize=(10,6))
     plt.plot(pop_by_month.index, pop_by_month.values, marker='o', linestyle='-', color='orange')
