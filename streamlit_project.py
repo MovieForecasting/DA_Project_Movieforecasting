@@ -12,6 +12,8 @@ from sklearn.ensemble import RandomForestRegressor
 import joblib
 from sklearn.metrics import r2_score
 
+df_exploration = pd.read_csv("df_github.csv")
+
 st.title("Prévision du succès d'un film")
 
 st.sidebar.title("Sommaire")
@@ -34,6 +36,12 @@ if page == pages[0]:
 
 elif page == pages[1]:
     st.write("### Exploration du Dataset et DataViz'")
+
+    st.dataframe(df_exploration.head())
+    
+    st.write("Dimensions du dataframe :")
+    
+    st.write(df_exploration.shape)
 
 # A COMPLETER
 
