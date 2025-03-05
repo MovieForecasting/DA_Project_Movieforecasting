@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
@@ -15,7 +16,7 @@ st.title("Prévision du succès d'un film")
 
 st.sidebar.title("Sommaire")
 
-pages=["Présentation du projet", "Exploration du Dataset et DataViz'", "Préprocessing", "Modélisation", "Machine Learning", "Conclusion", "Tests"]
+pages=["Présentation du projet", "Exploration du Dataset et DataViz'", "Préprocessing", "Modélisation", "Machine Learning", "Conclusion"]
 
 page=st.sidebar.radio("Aller vers", pages)
 
