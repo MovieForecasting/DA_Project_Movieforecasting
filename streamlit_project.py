@@ -22,6 +22,8 @@ pages=["Présentation du projet", "Exploration du Dataset et DataViz'", "Pré-pr
 
 page=st.sidebar.radio("Aller vers", pages)
 
+st.write("Auteurs")
+
 if page == pages[0]:
   
   st.write("### Présentation du projet")
