@@ -119,16 +119,119 @@ elif page == pages[2]:
     image_path = "boxplot_popularity2024.png"
     st.image(image_path, width=600)
 
-    avg_popularity = df_until_2023_sorted.groupby('release_year')['popularity'].mean()
+    # Ajout d'onglets
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["DataViz' 1", "DataViz' 2", "DataViz' 3","DataViz' 4","DataViz' 5","DataViz' 6","DataViz' 7"])
 
-    fig2, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(avg_popularity.index, avg_popularity.values)
-    ax.set_title("Evolution de la popularité moyenne des films au fil des années");
-    ax.set_xlabel("Année")
-    ax.set_ylabel("Popularité")
-    st.pyplot(fig2)
+    # Ajouter du contenu dans chaque onglet
+    with tab1:
+        st.title("Evolution de la popularité des films au fil des années")
 
-# A COMPLETER
+        avg_popularity = df_until_2023_sorted.groupby('release_year')['popularity'].mean()
+        fig2, ax = plt.subplots(figsize=(10, 6))
+        ax.plot(avg_popularity.index, avg_popularity.values)
+        ax.set_title("Evolution de la popularité moyenne des films au fil des années");
+        ax.set_xlabel("Année")
+        ax.set_ylabel("Popularité")
+        st.pyplot(fig2)
+        
+        st.write("##### Analyse du graphique")
+        st.write("""
+        Le graphique montre l’évolution de la popularité moyenne des films en fonction de leur année de sortie. Plusieurs tendances émergent :
+        - **Tendance générale à la hausse :** On observe une augmentation progressive de la popularité des films au fil des décennies. Cette tendance peut être liée à une amélioration des techniques de production, à une meilleure accessibilité aux films et à une augmentation du nombre de spectateurs.
+        - **Pics et baisses de popularité :** Certaines années affichent des pics, ce qui pourrait être dû à la sortie de films marquants qui ont dominé le box-office et influencé la tendance générale. La baisse notable en 2020 coïncide avec la crise sanitaire mondiale, qui a entraîné une diminution du nombre de films en salle et une réduction du nombre de spectateurs.
+        """)
+
+        st.write("##### Avis 'métier'")
+        st.write("Cette analyse est pertinente pour comprendre l’évolution des attentes du public et l’impact des grandes tendances cinématographiques.")
+        st.write("L'augmentation générale de la popularité peut être attribuée à l'évolution du marketing des films, à l'essor des grandes franchises, ainsi qu'à une meilleure structuration des sorties en salle.")
+        st.write("Les baisses de certaines périodes peuvent être liées à des crises économiques, à des changements dans l’industrie cinématographique ou à une concurrence accrue entre les films.")
+        st.write("L’étude de ces variations permet aux producteurs et distributeurs de mieux anticiper le marché et d’adapter leurs stratégies de sortie.")
+
+        st.write("##### Conclusion & Exploitation")
+        st.write("Si l’année de sortie influence la popularité, elle pourrait être intégrée comme une variable clé dans notre modèle de prédiction du succès au box-office.. Après lecture du graphique, on remarque une stabilisation à partir de 1995, il nous semble utile de réduite notre jeu de données de films à partir cette année.")
+
+    with tab2:
+        st.title("Popularité moyenne des films en fonction du mois de sortie")
+
+        if 'release_month' not in df_until_2023_sorted.columns:
+            df_until_2023_sorted['release_month'] = df_until_2023_sorted['release_date'].dt.month
+        
+        pop_by_month = df_until_2023_sorted.groupby('release_month')['popularity'].mean()
+
+        fig3, ax = plt.subplots(figsize=(10,6))
+        ax.plot(pop_by_month.index, pop_by_month.values, marker='o', linestyle='-', color='orange')
+        ax.set_title("Popularité moyenne des films par mois de sortie");
+        ax.set_xlabel("Mois")
+        ax.set_ylabel("Popularité moyenne")
+
+        # Mettre en avant les mois clés
+        highlight_months = [7, 12]
+        for month in highlight_months:
+            if month in pop_by_month.index:
+                ax.scatter(month, pop_by_month[month], color="red", s=100, zorder=3)
+        
+        st.pyplot(fig3)
+
+        st.write("##### Analyse du graphique")
+        st.write("""
+        - Janvier : Faible popularité (1.5), ce qui pourrait s’expliquer par un creux post-fêtes.
+        - Février - Mars : Augmentation notable, peut-être liée aux films sortis autour des Oscars et des vacances d’hiver.
+        - Juin - Août : Hausse en été, ce qui correspond aux blockbusters estivaux.
+        - Septembre - Novembre : Légère baisse, souvent une période de transition avec moins de grosses sorties.
+        - Décembre : Pic de popularité qui remonte, sans doute grâce aux sorties de Noël et aux films familiaux/festifs.
+        """)
+
+        st.write("##### Avis 'métier'")
+        st.write("Pour maximiser le succès au box-office, il est préférable de programmer la sortie d’un film durant l’été (juin-août) ou les fêtes de fin d’année (décembre), périodes où les films rencontrent le plus de popularité.")
+        st.write("À l’inverse, une sortie en janvier ou au début du printemps (mars-avril) pourrait être plus risquée en termes d’audience.")
+
+        st.write("##### Conclusion & Exploitation")
+        st.write("Si la popularité d'un film est fortement influencé par son mois de sortie, il pourrait être intéressant d'intégrer cette variable dans notre modèle prédictif.")
+
+    with tab3:
+        st.title("Popularité moyenne par genre")
+
+        st.write("##### Analyse du graphique")
+
+        st.write("##### Avis 'métier'")
+
+        st.write("##### Conclusion & Exploitation")
+        
+    with tab4:
+        st.title("Distribution de la popularité par catégorie de budget")
+
+        st.write("##### Analyse du graphique")
+
+        st.write("##### Avis 'métier'")
+
+        st.write("##### Conclusion & Exploitation")
+
+    with tab5:
+        st.title("Distribution des langues originales par popularité moyenne")
+
+        st.write("##### Analyse du graphique")
+
+        st.write("##### Avis 'métier'")
+
+        st.write("##### Conclusion & Exploitation")
+
+    with tab6:
+        st.title("Distribution des acteurs par popularité et par weighted rating")
+
+        st.write("##### Analyse du graphique")
+
+        st.write("##### Avis 'métier'")
+
+        st.write("##### Conclusion & Exploitation")
+
+    with tab7:
+        st.title("Distribution des réalisateurs par popularité et par weighted rating")
+
+        st.write("##### Analyse du graphique")
+
+        st.write("##### Avis 'métier'")
+
+        st.write("##### Conclusion & Exploitation")
 
 elif page == pages[3]:
     st.write("### Pré-processing")
