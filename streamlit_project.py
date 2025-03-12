@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
+from io import StringIO
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.linear_model import LinearRegression
@@ -15,6 +16,16 @@ from sklearn.metrics import r2_score
 st.set_page_config(page_title="Prévision du succès d'un film", page_icon="🎥")
 
 df_exploration = pd.read_csv("df_github.csv")
+
+buffer = StringIO()
+df_exploration.info(buf=buffer)
+s = buffer.getvalue()
+
+# Transformation du dataframe pour Exploration du Dataset
+df_exploration['release_date'] = pd.to_datetime(df_exploration['release_date'], errors='coerce')
+df_until_2023 = df_exploration[df_exploration['release_date'].dt.year <= 2023].copy()
+df_until_2023_sorted = df_until_2023.sort_values(by='popularity', ascending=False)
+
 st.title("Prévision du succès d'un film")
 
 image_path = "logo_datascientest.png"
@@ -60,9 +71,20 @@ elif page == pages[1]:
     
     st.write(df_exploration.shape)
 
+    st.write("Autres informations sur le dataframe :")
+
+    with st.expander("Informations sur le dataset"):
+        st.text(s)
+
+    if st.checkbox("Montrer les valeurs manquantes"): 
+        st.dataframe(df_exploration.isna().sum())
+    
+    if st.checkbox("Montrer les doublons") : 
+        st.write(df_exploration.duplicated().sum())
+
 elif page == pages[2]:
 
-    st.write("Nous allons ensuite présenter divers graphiques exploitant nos jeux de données :")
+    st.write("Nous allons ensuite présenter divers graphiques exploitant nos jeux de données.")
 
     st.write("### Méthodologie")
 
@@ -70,7 +92,7 @@ elif page == pages[2]:
 
     st.write("Nous nous intéressons à l'indicateur 'popularity' de TMDB (The Movie Database) qui sera la variable d'analyse exploratoire car il reflète la popularité d'un film ou d'une série selon plusieurs critères. L'algorithme de calcul de cet indicateur n'est pas public mais nous savons qu'il est basé sur plusieurs facteurs :")
     st.write("""
-    - Les vues des pages)
+    - Les vues des pages
     - Les votes des utilisateurs
     - Le nombre d'ajout en 'favoris' et/ou en 'watchlist'
     - Le nombre de recherches sur la plateforme
@@ -90,9 +112,21 @@ elif page == pages[2]:
     st.write("A titre d'exemple, nous pouvons penser que les films sorti en 2024 dans notre dataset dont certains qui l'ont été récemment notamment sur le mois de décembre, ont un score élevé de popularité car ils suscitent beaucoup d'intérêt et de curiostité de la part des utilisateurs. Cela revêt donc une importance dans l'analyse de données temporelles.")
     st.write("Afin de limiter l'impact de ces valeurs sur nos analyses, nous décidons d'exclure les données relatives à 2024.")
 
-    st.write("#### Conclusion & Exploitation")
+    st.write("##### Conclusion & Exploitation")
 
     st.write("Ce travail d'exploration va s'articuler autour de la variable 'popularity' notamment sa saisonalité et son interaction avec différentes variables telles que le genre, le budget, les réalisateurs et les acteurs.")
+    
+    image_path = "boxplot_popularity2024.png"
+    st.image(image_path, width=600)
+
+    avg_popularity = df_until_2023_sorted.groupby('release_year')['popularity'].mean()
+
+    fig2, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(avg_popularity.index, avg_popularity.values)
+    ax.set_title("Evolution de la popularité moyenne des films au fil des années");
+    ax.set_xlabel("Année")
+    ax.set_ylabel("Popularité")
+    st.pyplot(fig2)
 
 # A COMPLETER
 
