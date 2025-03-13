@@ -1,6 +1,6 @@
 # 🎬 Movie Forecasting - Prédiction du Succès des Films 🚀  
 
-![Movie Forecasting](https://i.imgur.com/AfFp7pu.png)  
+![Movie Forecasting](https://shotdeck.com/assets/images/stills/6MRIMR1W.jpg)
 
 ## 📌 Introduction  
 Bienvenue dans **Movie Forecasting**, un projet de Data Science visant à prédire le succès financier d’un film avant sa sortie en utilisant un modèle de Machine Learning entraîné sur les données de *The Movie Database (TMDB)*.  
