@@ -61,3 +61,13 @@ Ce projet repose sur les technologies suivantes :
 ### 1️⃣ **Installation des dépendances**
 ```bash
 pip install -r requirements.txt
+
+streamlit run streamlit_project.py
+
+📸 Aperçu de l’Application
+
+🤝 Contributeurs
+	•	Tristan Tansu - https://www.linkedin.com/in/tristan-tansu-42009365/
+	•	Camille Laluque - https://www.linkedin.com/in/camille-cadet-51629b140/
+	•	Samy Cao - https://www.linkedin.com/in/samy-cao
+	•	Jean-Noël Duchevet - https://www.linkedin.com/in/jean-noel-duchevet/
