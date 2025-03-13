@@ -119,6 +119,55 @@ elif page == pages[2]:
     image_path = "boxplot_popularity2024.png"
     st.image(image_path, width=600)
 
+    with st.expander("Création de la variable 'Weighted Rating"):
+        st.write("#### Weighted Rating : Qu’est-ce que c’est ?")
+        st.write("Le weighted rating (ou note pondérée) est une mesure qui vise à mieux refléter la qualité d’un film qu’une simple note moyenne. En effet, si un film n’a que 2 votes à 10/10, il ne doit pas dépasser un blockbuster ayant 10 000 votes à 8/10. Le weighted rating corrige ce problème en tenant compte à la fois de la note moyenne du film et de la note moyenne globale du catalogue, pondérées par le nombre de votes du film.")
+        st.write("##### Analyse de la formule de calcul du Weighted Rating")
+        st.code("""
+        *C = df['vote_average'].mean()
+        *C : la moyenne globale (vote_average) de tous les films.
+        *m = df['vote_count'].quantile(0.90)
+        *m : un seuil de votes, ici le 90ᵉ percentile de vote_count.
+        
+        Autrement dit, si le film dépasse ce seuil, il aura plus de poids dans son évaluation.
+        
+        Cette formule s’inspire de l’algorithme d’IMDb :
+
+        Weighted Rating = (v / (v+m)) * R + (m / (v+m)) * C
+        
+        où :
+        *v = nombre de votes pour ce film,
+        *R = note moyenne du film (vote_average),
+        *C = note moyenne globale,
+        *m = seuil minimum de votes.
+        """)
+
+        st.write("##### Avis 'métier'")
+        st.write("Une fois qu'un film possède un weighted rating, on peut l'associer :")
+        st.write("""
+        - aux acteurs (actrices) ayant participé à ce film
+        - aux réalisteurs (réalisatrices)
+        """)
+        st.write("**Filtrage** : On peut imposer des seuils de popularité et de weighted rating pour retenir uniquement les acteurs/réalisateurs associés à des films “validés” par un consensus suffisant.")
+        st.write("**Prédiction pré-sortie*** : Lorsque vous prévoyez le succès potentiel d’un futur film, savoir qu’un acteur ou réalisateur a souvent travaillé sur des films avec un fort weighted rating peut être un indicateur de qualité.")
+
+        st.write("##### Conclusion & Exploitation")
+        st.write("Le weighted rating permet de compenser la variable popularity en ajoutant une dimension de fiabilité dans l’appréciation. Si la popularité est la “température” instantanée de l’intérêt du public, le weighted rating est un “thermostat” plus stable, basé sur la quantité et la qualité des votes.")
+        st.write("Cela nous permet d’obtenir une évaluation plus représentative et d’éviter que des films avec peu de votes ne faussent les résultats.")
+    
+    # Création de la variable "weighted_rating"
+    C = df_until_2023_sorted['vote_average'].mean()
+    m = df_until_2023_sorted['vote_count'].quantile(0.90)
+
+    def weighted_rating(row, m=m, C=C):
+        v = row['vote_count']
+        R = row['vote_average']
+        if (v+m) == 0:
+            return R
+        return (v/(v+m))*R + (m/(v+m))*C
+
+    df_until_2023_sorted['weighted_rating'] = df_until_2023_sorted.apply(weighted_rating, axis=1)
+    
     # Ajout d'onglets
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["DataViz' 1", "DataViz' 2", "DataViz' 3","DataViz' 4","DataViz' 5","DataViz' 6","DataViz' 7"])
 
@@ -191,47 +240,190 @@ elif page == pages[2]:
     with tab3:
         st.title("Popularité moyenne par genre")
 
+        # Nettoyage de la variable 'Genres_clean'
+        df_filtered = df_until_2023_sorted
+        df_filtered['Genres_clean'] = df_filtered['Genres_clean'].fillna('')
+
+        df_filtered['Genres_clean'] = df_filtered['Genres_clean'].apply(lambda x: [genre.strip() for genre in x] if isinstance(x, list) else [genre.strip() for genre in x.split(',') if genre.strip() != ''])
+
+        df_filtered_exploded = df_filtered.explode('Genres_clean')
+        df_filtered_exploded = df_filtered_exploded[df_filtered_exploded['Genres_clean'] != '']
+
+        # Calculer la popularité moyenne par genre
+        genre_popularity_filtered = df_filtered_exploded.groupby('Genres_clean')['popularity'].mean().sort_values(ascending=True)
+
+        fig4, ax = plt.subplots(figsize=(12,8))
+        ax.barh(genre_popularity_filtered.index, genre_popularity_filtered.values, color=plt.cm.YlOrRd_r(range(len(genre_popularity_filtered))))
+        ax.set_xlabel("Popularité moyenne")
+        ax.set_ylabel("Genre")
+        ax.set_title("Popularité moyenne par genre (données filtrées)")
+        st.pyplot(fig4)
+
         st.write("##### Analyse du graphique")
+        st.write("Ce graphique met en évidence une forte popularité des films d'aventure, suivis de près par l'action et la science-fiction. À l'inverse, les documentaires et les films musicaux enregistrent une popularité bien plus faible. L'écart entre les films les plus et les moins populaires est significatif, soulignant une nette préférence du public pour les films à grand spectacle.")
 
         st.write("##### Avis 'métier'")
+        st.write("Pour maximiser la popularité d’un film, il est recommandé d’opter pour un genre plébiscité comme l’aventure, l’action ou la science-fiction. Ces genres attirent un large public grâce à leurs effets spéciaux, leurs intrigues dynamiques et leur accessibilité internationale.")
+        st.write("Cependant, un film appartenant à un genre moins populaire (romance, documentaire, musique, etc.) peut tout de même rencontrer le succès en misant sur un casting fort et une réalisation de qualité, qui peuvent compenser un intérêt initial plus faible.")
 
         st.write("##### Conclusion & Exploitation")
+        st.write("Le genre d’un film a un impact significatif sur sa popularité et doit être pris en compte dans la prédiction du succès au box-office. Cette variable pourra être intégrée au modèle prédictif pour affiner les estimations en fonction des préférences du public.")
         
     with tab4:
         st.title("Distribution de la popularité par catégorie de budget")
 
+        # Distribution de la popularité par catégorie de budget
+        df_filtered = df_until_2023_sorted.copy()
+        df_filtered = df_filtered[df_filtered['popularity'] <= 3000]
+
+        bins = [0, 1e6, 10e6, 100e6, np.inf]
+        labels = ["0-1M", "1M-10M", "10M-100M", "100M+"]
+        df_filtered["budget_category"] = pd.cut(df_filtered["Budget"], bins=bins, labels=labels)
+
+        fig5, ax = plt.subplots(figsize=(12,8))
+        sns.stripplot(x="budget_category", y="popularity", data=df_filtered,
+                      jitter=True, size=3, alpha=1, palette="YlOrRd")
+        ax.set_xlabel("Catégorie de budget")
+        ax.set_ylabel("Popularité")
+        ax.set_title("Distribution de la popularité par catégorie de budget (jusqu'à 2023) - Strip Plot")
+        st.pyplot(fig5)
+
         st.write("##### Analyse du graphique")
+        st.write("Le graphique montre que les films avec un budget inférieur à 10M ont généralement une popularité plus faible. À l’inverse, les films bénéficiant d’un budget supérieur à 10M présentent une plus grande dispersion de popularité, avec plusieurs d’entre eux atteignant des niveaux très élevés.")
 
         st.write("##### Avis 'métier'")
+        st.write("Le budget d’un film ne détermine pas à lui seul son succès. On observe que des films très populaires existent dans toutes les catégories de budget. Cependant, un budget plus élevé semble augmenter les chances qu’un film atteigne une popularité importante, probablement en raison d’un meilleur marketing, d’un casting attractif et de meilleures ressources techniques.")
 
         st.write("##### Conclusion & Exploitation")
+        st.write("Bien que le budget ne soit pas le facteur principal de la popularité d’un film, il peut jouer un rôle utile dans son succès. Il serait donc pertinent de l’inclure comme variable dans le modèle prédictif, mais en le combinant avec d’autres facteurs comme le genre, le casting et la date de sortie.")
 
     with tab5:
         st.title("Distribution des langues originales par popularité moyenne")
 
+        # Distribution des langues originales par popularité moyenne
+        df_filtered = df_until_2023_sorted.copy()
+        df_filtered = df_filtered[df_filtered['original_language'].notnull()]
+        language_popularity = df_filtered.groupby('original_language')['popularity'].mean().sort_values(ascending=False).head(10)
+        lang_mapping = {'en': 'English','fr': 'French','es': 'Spanish','it': 'Italian','de': 'German','ko': 'Korean','ja': 'Japanese','hi': 'Hindi','pt': 'Portuguese','ru': 'Russian','tn': 'Tswana','su': 'Sundanese','no': 'Norwegian','lv': 'Latvian','cn': 'Chinese','te': 'Telugu','dz': 'Dzongkha','yo': 'Yoruba','da': 'Danish'}
+        language_popularity.index = language_popularity.index.map(lambda x: lang_mapping.get(x, x))
+
+        # Tracer le graphique
+        fig6, ax = plt.subplots(figsize=(12,8))
+        ax.barh(y=language_popularity.index, width=language_popularity.values, color=plt.cm.YlOrRd_r(range(len(language_popularity))))
+        ax.set_xlabel("Popularité moyenne")
+        ax.set_ylabel("Langue originale")
+        ax.set_title("Top 10 des langues originales par popularité moyenne")
+        st.pyplot(fig6)
+
         st.write("##### Analyse du graphique")
+        st.write("On observe un pic de populartité pour les films en tswana avec une note moyenne de 8.5. Cependant, les autres langues tournent autour de 3 à 5.5 de moyenne ce qui reste relativement homogène.")
 
         st.write("##### Avis 'métier'")
+        st.write("La langue d’un film pourrait influencer sa popularité, mais en dehors du cas particulier du tswana, aucune tendance marquée ne se dégage. Cette anomalie peut être due à un faible nombre de films dans cette langue, ce qui fausse la moyenne.")
 
         st.write("##### Conclusion & Exploitation")
+        st.write("La langue originale du film pourrait être ajoutée au modèle de prédiction, mais son impact semble limité. Elle pourrait être utile en complément d’autres variables comme le genre ou le pays de distribution.")
 
     with tab6:
         st.title("Distribution des acteurs par popularité et par weighted rating")
 
+        # Nettoyage de la variable "Actors"
+        df_actors = df_until_2023_sorted.copy()
+        df_actors['Actors'] = df_actors['Actors'].fillna('')
+        df_actors['Actors'] = df_actors['Actors'].apply(lambda x: x if isinstance(x, list) else [actor.strip() for actor in x.split(',') if actor.strip() != ''])
+
+        df_actors_exploded = df_actors.explode('Actors')
+        df_actors_exploded = df_actors_exploded[df_actors_exploded['Actors'] != "Unknown"]
+        
+        actor_popularity = df_actors_exploded.groupby('Actors')['popularity'].mean()
+
+        # Calculer la popularité moyenne par acteurs
+        actor_weighted_rating = df_actors_exploded.groupby('Actors')['weighted_rating'].mean()
+        actor_counts = df_actors_exploded['Actors'].value_counts()
+        actor_stats = pd.DataFrame({'avg_popularity': actor_popularity,'avg_weighted_rating': actor_weighted_rating,'film_count': actor_counts})
+
+        # Tracer le graphique
+        def plot_actors(min_popularity, min_weighted_rating):
+        # Filtre les acteurs selon min_popularity et min_weighted_rating, calcule un score combiné (avg_popularity + avg_weighted_rating), trie et affiche un barplot du top 100."""
+            global actor_stats
+            actor_stats_filtered = actor_stats[(actor_stats['avg_popularity'] >= min_popularity) & (actor_stats['avg_weighted_rating'] >= min_weighted_rating)].copy()
+            actor_stats_filtered['combined_score'] = (actor_stats_filtered['avg_popularity'] + actor_stats_filtered['avg_weighted_rating'])
+            actor_stats_sorted = actor_stats_filtered.sort_values(by='combined_score', ascending=False)
+
+            top100_actors = actor_stats_sorted.head(100)
+
+            fig7, ax = plt.subplots(figsize=(12,20))
+            ax.barh(x='combined_score', y=top100_actors.index, width=top100_actors, color=plt.cm.YlOrRd_r(range(len(top100_actors))))
+            ax.set_xlabel("Score combiné (Popularité + Weighted Rating)", fontsize=14)
+            ax.set_ylabel("Acteur", fontsize=14)
+            ax.set_title(f"Top 100 Acteurs (pop ≥ {min_popularity}, WR ≥ {min_weighted_rating})", fontsize=16)
+            plt.xticks(fontsize=12)
+            plt.yticks(fontsize=12)
+            plt.tight_layout()
+            st.pyplot(fig7)
+
         st.write("##### Analyse du graphique")
+        st.write("Ce graphique présente les 100 acteurs ayant une popularité ≥ 1.0 et un Weighted Rating (WR) ≥ 7.0.")
+        st.write("Peter Crombie se démarque nettement en tête du classement.")
+        st.write("Les premiers acteurs affichent une légère décroissance en popularité avant une stabilisation progressive. On observe une répartition assez homogène parmi le reste des acteurs, avec une baisse progressive des scores.")
 
         st.write("##### Avis 'métier'")
+        st.write("L’analyse de la distribution des acteurs en fonction de leur popularité et de leur weighted rating permet d’identifier des tendances intéressantes.")
+        st.write("Certains noms sont peu connus du grand public, ce qui pourrait indiquer un biais lié aux films récents ou à des productions spécifiques ayant bénéficié d’un bon accueil critique.")
+        st.write("Il est possible que certains acteurs figurent en tête du classement en raison de films récents ayant eu une forte exposition médiatique.")
 
         st.write("##### Conclusion & Exploitation")
+        st.write("L'intégration des acteurs dans le modèle de prédiction peut être pertinente.")
+        st.write("La popularité d’un film peut être fortement influencée par la présence de certains acteurs en tête d'affiche.")
+        st.write("Leur score combiné (Popularité + Weighted Rating) pourrait apporter une valeur ajoutée, notamment pour les films à fort budget misant sur des têtes d’affiche.")
 
     with tab7:
         st.title("Distribution des réalisateurs par popularité et par weighted rating")
 
-        st.write("##### Analyse du graphique")
+        # Nettoyage de la variable "Director"
+        df_directors = df_until_2023_sorted.copy()
+        df_directors['Director'] = df_directors['Director'].fillna('')
+        df_directors['Director'] = df_directors['Director'].apply(lambda x: x if isinstance(x, list) else [dir.strip() for dir in x.split(',') if dir.strip() != ''])
 
+        df_directors_exploded = df_directors.explode('Director')
+        df_directors_exploded = df_directors_exploded[df_directors_exploded['Director'] != "Unknown"]
+        director_popularity = df_directors_exploded.groupby('Director')['popularity'].mean()
+
+        # Calculer la popularité moyenne par directors
+        director_weighted_rating = df_directors_exploded.groupby('Director')['weighted_rating'].mean()
+        director_counts = df_directors_exploded['Director'].value_counts()
+        director_stats = pd.DataFrame({'avg_popularity': director_popularity,'avg_weighted_rating': director_weighted_rating,'film_count': director_counts})
+
+        # Tracer le graphique
+        def plot_directors(min_popularity, min_weighted_rating):
+        # Filtre les réalisateurs selon min_popularity et min_weighted_rating, calcule le combined_score (pop + weighted_rating), trie et affiche un barplot du top 100.
+            global director_stats
+            director_stats_filtered = director_stats[(director_stats['avg_popularity'] >= min_popularity) & (director_stats['avg_weighted_rating'] >= min_weighted_rating)].copy()
+            director_stats_filtered['combined_score'] = (director_stats_filtered['avg_popularity'] + director_stats_filtered['avg_weighted_rating'])
+
+            director_stats_sorted = director_stats_filtered.sort_values(by='combined_score', ascending=False)
+            top100_directors = director_stats_sorted.head(100)
+
+            fig8, ax = plt.subplots(figsize=(20,20))
+            ax.barh(y=top100_directors.index, width=top100_directors['combined_score'], color=plt.cm.YlOrRd_r(range(len(top100_directors))))
+            ax.set_xlabel("Score combiné (Popularité + Weighted Rating)", fontsize=14)
+            ax.set_ylabel("Réalisateur", fontsize=14)
+            ax.set_title(f"Top 100 Réalisateurs (pop ≥ {min_popularity}, WR ≥ {min_weighted_rating})", fontsize=16)
+            plt.xticks(fontsize=12)
+            plt.yticks(fontsize=12)
+            plt.tight_layout()
+            st.pyplot(fig8)
+
+        st.write("##### Analyse du graphique")
+        st.write("Le graphique met en évidence les réalisateurs les mieux classés en fonction d’un score combiné, intégrant popularité et note moyenne pondérée (WR).")
+        st.write("Domination des réalisateurs d’animation : Jared Bush, Rodney Rothman, Bob Persichetti et Josh Cooley arrivent en tête. L’animation est un genre rentable, souvent associé à des films bien notés sur des plateformes comme IMDb.")
+        st.write("Absence des grands noms du cinéma : Spielberg, Nolan ou Tarantino ne figurent pas dans le classement. Cela suggère que l’algorithme favorise les films récents ayant un fort impact immédiat plutôt que les réalisateurs au long palmarès.")
+        
         st.write("##### Avis 'métier'")
+        st.write("Ce classement met en avant une nouvelle génération de réalisateurs, particulièrement dans l’animation. Il souligne aussi le fait que des films bien notés mais moins populaires peuvent surpasser ceux de réalisateurs emblématiques, ce qui suggère que la popularité brute ne suffit pas à garantir une position élevée.")
 
         st.write("##### Conclusion & Exploitation")
+        st.write("Le succès d’un film peut être fortement corrélé au réalisateur. Certains noms fonctionnent mieux en fonction du genre cinématographique et de la popularité associée. On peut donc l'intégrer dans le modèle de prédiction.")
 
 elif page == pages[3]:
     st.write("### Pré-processing")
