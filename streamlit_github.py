@@ -11,6 +11,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 import joblib
+import requests
+import io
 # Base URL for GitHub raw files
 github_base_url = "https://raw.githubusercontent.com/MovieForecasting/DA_Project_Movieforecasting/main/"
 from sklearn.metrics import r2_score
@@ -909,7 +911,9 @@ elif page == pages[5]:
         return X_new_scaled
  
     # Chargement du pipeline sauvegardé
-    pipeline = joblib.load("pipeline.joblib")
+    joblib_url = "https://raw.githubusercontent.com/VotreNomUtilisateur/VotreRepo/master/pipeline.joblib"
+    response = requests.get(joblib_url)
+    pipeline = joblib.load(io.BytesIO(response.content))
     print("🔍 Clés du pipeline chargé:", pipeline.keys())
  
     st.write("#### Veuillez saisir les informations du film :")
