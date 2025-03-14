@@ -667,7 +667,7 @@ elif page == pages[4]:
     import joblib
     import streamlit as st
 
-    st.title("🎬 Modélisation et Machine Learning")
+    st.title("Modélisation et Machine Learning ⚙️")
     # Afficher la photo Arrival.jpg (assure-toi qu'elle est bien dans le même dossier)
     st.image("Arrival.jpg", width=700)
 
