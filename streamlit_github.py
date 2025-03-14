@@ -109,7 +109,7 @@ import streamlit.components.v1 as components
 music_url = github_base_url + "Time.mp3"
 components.html(
     f"""
-    <audio src="{music_url}" autoplay loop style="display:none;">
+    <audio src="{music_url}" autoplay loop controls>
       Your browser does not support the audio element.
     </audio>
     """,
