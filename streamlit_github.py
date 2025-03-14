@@ -911,7 +911,7 @@ elif page == pages[5]:
         return X_new_scaled
  
     # Chargement du pipeline sauvegardé
-    joblib_url = "https://raw.githubusercontent.com/VotreNomUtilisateur/VotreRepo/master/pipeline.joblib"
+    joblib_url = "https://raw.githubusercontent.com/MovieForecasting/DA_Project_Movieforecasting/master/pipeline.joblib"
     response = requests.get(joblib_url)
     pipeline = joblib.load(io.BytesIO(response.content))
     print("🔍 Clés du pipeline chargé:", pipeline.keys())
