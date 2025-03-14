@@ -912,7 +912,7 @@ elif page == pages[5]:
  
     # Chargement du pipeline sauvegardé
     joblib_url = "https://raw.githubusercontent.com/MovieForecasting/DA_Project_Movieforecasting/master/pipeline.joblib"
-    response = requests.get(joblib_url)
+    response = requests.get(github_base_url + "pipeline.joblib")
     pipeline = joblib.load(io.BytesIO(response.content))
     print("🔍 Clés du pipeline chargé:", pipeline.keys())
  
