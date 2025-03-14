@@ -1,8 +1,10 @@
 streamlit
 pandas
-numpy==1.24.3
+numpy==1.24.4
 matplotlib
 seaborn
 plotly
 scikit-learn
 joblib
+setuptools>=68.0.0
+setuptools-distutils
