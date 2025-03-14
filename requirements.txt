@@ -7,4 +7,3 @@ plotly
 scikit-learn
 joblib
 setuptools>=68.0.0
-setuptools-distutils
