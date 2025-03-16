@@ -679,6 +679,9 @@ elif page == pages[4]:
         # 1. Chargement & Nettoyage
         # -----------------------------
         df = pd.read_csv("df_github.csv")
+        if df["original_language"].dtype == "object":
+            le_language = LabelEncoder()
+            df["original_language"] = le_language.fit_transform(df["original_language"])
         st.write(f"✅ Données chargées : {df.shape[0]} lignes, {df.shape[1]} colonnes")
 
         # Filtrage
@@ -816,6 +819,8 @@ elif page == pages[4]:
             "actor_mapping": actors_weighted_avg,
             "expected_features": X_train_final.columns.tolist()
         }
+        if "le_language" in locals():
+            pipeline["label_encoder_language"] = le_language
         print("🔍 Clés du pipeline avant sauvegarde:", pipeline.keys())
         joblib.dump(pipeline, "pipeline.joblib")
         st.subheader("Modèle sélectionné : Random Forest Regressor 🌳")
