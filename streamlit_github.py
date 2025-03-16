@@ -668,7 +668,6 @@ elif page == pages[4]:
     import streamlit as st
 
     st.title("Modélisation et Machine Learning ⚙️")
-    st.subheader("Modèle sélectionné : Random Forest Regressor 🌳")
     # Afficher la photo Arrival.jpg (assure-toi qu'elle est bien dans le même dossier)
     st.image("Arrival.jpg", width=700)
 
@@ -819,6 +818,7 @@ elif page == pages[4]:
         }
         print("🔍 Clés du pipeline avant sauvegarde:", pipeline.keys())
         joblib.dump(pipeline, "pipeline.joblib")
+        st.subheader("Modèle sélectionné : Random Forest Regressor 🌳")
         st.success("Pipeline complet relancé et sauvegardé !")
 
 elif page == pages[5]:
