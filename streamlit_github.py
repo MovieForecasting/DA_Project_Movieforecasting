@@ -920,6 +920,29 @@ elif page == pages[5]:
     st.write("#### Veuillez saisir les informations du film :")
  
     with st.form("my_form"):
+        # Liste des langues disponibles dans le dataset
+        languages = {
+            "en": "Anglais",
+            "fr": "Français",
+            "ja": "Japonais",
+            "es": "Espagnol",
+            "de": "Allemand",
+            "ko": "Coréen",
+            "pt": "Portugais",
+            "it": "Italien",
+            "ru": "Russe",
+            "hi": "Hindi",
+            "cn": "Chinois",
+            "te": "Télougou",
+            "da": "Danois",
+            "no": "Norvégien"
+        }
+        
+        # Ajout du menu déroulant pour la langue originale
+        selected_language = st.selectbox("Langue originale du film :", options=list(languages.values()))
+        
+        # Conversion du choix en code langue (ex: "Anglais" → "en")
+        original_language = [key for key, value in languages.items() if value == selected_language][0]
         import datetime
         release_date = st.date_input("Date de sortie :", value=datetime.date(2017, 12, 15))
         Budget = st.number_input("Budget (en dollars):", min_value=0, value=317000000)
@@ -957,6 +980,7 @@ elif page == pages[5]:
                 "Budget": [Budget],
                 "Director": [Director],
                 "Actors": [Actors],
+                "original_language": [original_language],  # Ajout de la langue
                 "Genres_clean": [Genres_clean],
                 "popularity": [popularity]  # On inclut la popularité ici
             }
