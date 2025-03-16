@@ -871,6 +871,7 @@ elif page == pages[5]:
         df_trans['Director'] = df_trans['Director'].apply(lambda x: x[0] if isinstance(x, list) and len(x) > 0 else "Unknown")
         df_trans['Actors'] = df_trans['Actors'].apply(lambda x: x[0] if isinstance(x, list) and len(x) > 0 else "Unknown")
         df_trans['Genres_clean'] = df_trans['Genres_clean'].apply(lambda x: x[0] if isinstance(x, list) and len(x) > 0 else "Unknown")
+        df_trans["original_language"] = df_trans["original_language"].apply(lambda x: safe_label_transform(x, pipeline["label_encoder_language"]))
  
         # Comme nous n'avons pas de véritables Recettes ni votes, on définit ces colonnes sur 0
         df_trans['log_Recettes'] = 0
