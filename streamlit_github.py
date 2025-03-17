@@ -1065,6 +1065,29 @@ elif page == pages[6]:
     Une autre piste serait d’**enrichir notre dataset avec des données externes**, comme les tendances des réseaux sociaux ou les notes des critiques, afin d’affiner encore plus la compréhension des facteurs de succès d’un film.  
     Enfin, une meilleure **modélisation des interactions entre budget, acteurs et popularité** pourrait permettre d’optimiser encore davantage les performances du modèle.
     **Ce projet démontre la puissance des données dans la prise de décisions stratégiques et financières dans l’industrie du cinéma.**
-    
-    Merci d’avoir suivi cette aventure avec nous ! 
+     
     """)
+    st.write("Avant de terminer, nous aimerions avoir votre retour sur ce projet. Merci de prendre quelques instants pour répondre à ces questions :")
+
+    with st.form(key="feedback_form"):
+        st.write("### 📝 Votre avis nous intéresse !")
+
+        satisfaction = st.radio("Avez-vous trouvé notre projet intéressant ?", ["Oui", "Non"])
+        comprehension = st.radio("Avez-vous compris la méthodologie utilisée ?", ["Oui", "Non"])
+        ml_experience = st.selectbox("Avez-vous déjà utilisé un modèle de Machine Learning ?", ["Oui", "Non", "Un peu"])
+        best_part = st.multiselect(
+            "Quelle partie avez-vous préférée ?",
+            ["Exploration des données", "Visualisations", "Modélisation", "Prédictions", "Conclusion"]
+        )
+        improvement_suggestions = st.text_area("Quelles améliorations proposeriez-vous ?")
+
+        submit_button = st.form_submit_button(label="Envoyer")
+
+    if submit_button:
+        st.success("✅ Merci pour votre retour ! 🚀")
+        st.write("### Récapitulatif de vos réponses :")
+        st.write(f"**Projet intéressant ?** {satisfaction}")
+        st.write(f"**Méthodologie comprise ?** {comprehension}")
+        st.write(f"**Expérience en Machine Learning ?** {ml_experience}")
+        st.write(f"**Partie préférée :** {', '.join(best_part) if best_part else 'Aucune sélectionnée'}")
+        st.write(f"**Suggestions d'amélioration :** {improvement_suggestions if improvement_suggestions else 'Aucune'}")
