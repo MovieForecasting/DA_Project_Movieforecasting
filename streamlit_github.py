@@ -173,6 +173,8 @@ elif page == pages[1]:
 
 elif page == pages[2]:
 
+    st.image("Interstellar.jpg", width=700)
+
     st.write("Nous allons ensuite présenter divers graphiques exploitant nos jeux de données.")
 
     st.write("### Méthodologie")
@@ -654,7 +656,6 @@ elif page == pages[3]:
         st.dataframe(df.head())
 
 elif page == pages[4]:
-    st.image("Interstellar.jpg", width=700)
     import pandas as pd
     import numpy as np
     import matplotlib.pyplot as plt
