@@ -13,6 +13,10 @@ from sklearn.ensemble import RandomForestRegressor
 import joblib
 import requests
 import io
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 # Base URL for GitHub raw files
 github_base_url = "https://raw.githubusercontent.com/MovieForecasting/DA_Project_Movieforecasting/main/"
 from sklearn.metrics import r2_score
@@ -1072,6 +1076,7 @@ elif page == pages[6]:
     with st.form(key="feedback_form"):
         st.write("### 📝 Votre avis nous intéresse !")
 
+        user_email = st.text_input("Votre adresse email :", placeholder="exemple@email.com")
         satisfaction = st.radio("Avez-vous trouvé notre projet intéressant ?", ["Oui", "Non"])
         comprehension = st.radio("Avez-vous compris la méthodologie utilisée ?", ["Oui", "Non"])
         ml_experience = st.selectbox("Ce projet vous a-t-il fait découvrir de nouvelles choses sur la Data Science et l'IA ?", ["Oui", "Non", "Un peu"])
@@ -1092,3 +1097,49 @@ elif page == pages[6]:
         st.write(f"**Découverte de nouvelles choses sur la Data Science et l'IA ?** {ml_experience}")
         st.write(f"**Note du projet :** {experience_rating}/10")
         st.write(f"**Suggestions d'amélioration :** {improvement_suggestions if improvement_suggestions else 'Aucune'}")
+
+        # 📩 Configuration de l'email
+        SMTP_SERVER = "smtp.gmail.com"
+        SMTP_PORT = 587
+        EMAIL_SENDER = "movieforecastingdatascientest@gmail.com"
+        EMAIL_PASSWORD = "TON_MOT_DE_PASSE_GMAIL"  # Remplace par ton mot de passe ou un mot de passe d'application
+        EMAIL_RECEIVER = "movieforecastingdatascientest@gmail.com"  # Envoi vers ton email de projet
+
+        # Contenu du mail
+        email_content = f"""
+        <h2>📊 Feedback reçu sur le projet Movie Forecasting</h2>
+        <p><b>Projet intéressant ?</b> {satisfaction}</p>
+        <p><b>Méthodologie comprise ?</b> {comprehension}</p>
+        <p><b>Découverte IA / Data Science ?</b> {ml_experience}</p>
+        <p><b>Note du projet :</b> {experience_rating}/10</p>
+        <p><b>Suggestions :</b> {improvement_suggestions if improvement_suggestions else 'Aucune'}</p>
+        <p>Merci encore pour votre participation ! 🚀</p>
+        """
+
+        try:
+            message = MIMEMultipart()
+            message["From"] = EMAIL_SENDER
+            message["To"] = EMAIL_RECEIVER
+            message["Subject"] = "📊 Nouveau feedback sur Movie Forecasting"
+            message.attach(MIMEText(email_content, "html"))
+
+            server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+            server.starttls()
+            server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+            server.send_message(message)
+            server.quit()
+            st.success("📩 Feedback envoyé avec succès à l'équipe !")
+
+        # 📩 Envoi d'un email de confirmation à l'utilisateur s'il a fourni un email
+            if user_email:
+                message["To"] = user_email
+                message["Subject"] = "✅ Merci pour votre feedback sur Movie Forecasting"
+                server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+                server.starttls()
+                server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+                server.send_message(message)
+                server.quit()
+                st.success("📩 Un email de confirmation a été envoyé à l'utilisateur.")
+
+        except Exception as e:
+            st.error(f"❌ Erreur lors de l'envoi du mail : {e}")
