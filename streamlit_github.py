@@ -1069,7 +1069,7 @@ elif page == pages[6]:
     """)
     st.write("Avant de terminer, nous aimerions avoir votre retour sur ce projet. Merci de prendre quelques instants pour répondre à ces questions :")
 
-   with st.form(key="feedback_form"):
+    with st.form(key="feedback_form"):
     st.write("### 📝 Votre avis nous intéresse !")
 
     satisfaction = st.radio("Avez-vous trouvé notre projet intéressant ?", ["Oui", "Non"])
