@@ -594,6 +594,7 @@ elif page == pages[3]:
         df['month_cos'] = np.cos(2 * np.pi * df['month'] / 12)
         df.drop(["release_date", "month"], axis=1, inplace=True)
         st.write("Extraction des informations temporelles effectuée.")
+        st.dataframe(df.head())
         st.session_state.df = df
 
     # Étape 5 : Traitement des colonnes textuelles
@@ -606,6 +607,7 @@ elif page == pages[3]:
         df['Actors'] = df['Actors'].apply(lambda x: x[0] if len(x) > 0 else "Unknown")
         df['Genres_clean'] = df['Genres_clean'].apply(lambda x: x[0] if len(x) > 0 else "Unknown")
         st.write("Traitement des colonnes textuelles effectué.")
+        st.dataframe(df.head()) 
         st.session_state.df = df
 
     # Étape 6 : Calcul du logarithme des Recettes
@@ -613,6 +615,7 @@ elif page == pages[3]:
         df = st.session_state.df
         df['log_Recettes'] = np.log1p(df['Recettes'])
         st.write("Calcul logarithme des Recettes effectué.")
+        st.dataframe(df.head())
         st.session_state.df = df
 
     # Étape 7 : Calcul du weighted_rating
@@ -627,6 +630,7 @@ elif page == pages[3]:
         df['weighted_rating'] = df.apply(weighted_rating, axis=1)
         df.drop(["vote_count", "vote_average"], axis=1, inplace=True)
         st.write("Calcul du weighted_rating effectué.")
+        st.dataframe(df.head())
         st.session_state.df = df
 
     # Étape 8 : Calcul des moyennes pondérées pour Director et Actors
@@ -635,6 +639,7 @@ elif page == pages[3]:
         df['director_weighted_avg'] = df.groupby('Director')['weighted_rating'].transform('mean')
         df['actors_weighted_avg'] = df.groupby('Actors')['weighted_rating'].transform('mean')
         st.write("Calcul des moyennes pondérées effectué.")
+        st.dataframe(df.head())
         st.session_state.df = df
 
     # Étape 9 : Gestion du budget
@@ -645,6 +650,7 @@ elif page == pages[3]:
         df['actors_budget_interaction'] = df['actors_weighted_avg'] * df['Budget']
         df['log_Budget'] = np.log1p(df['Budget'])
         st.write("Gestion du budget effectuée.")
+        st.dataframe(df.head())
         st.session_state.df = df
 
     # Étape 10 : Imputation des valeurs manquantes
@@ -656,12 +662,14 @@ elif page == pages[3]:
         df['Recettes'] = df.groupby("weighted_rating")['Recettes'].transform(lambda x: x.fillna(x.median()))
         st.write("Imputation des valeurs manquantes effectuée.")
         st.write("NaN Budget :", df['Budget'].isna().sum(), " - NaN Recettes :", df['Recettes'].isna().sum())
+        st.dataframe(df.head())
         st.session_state.df = df
 
     # Étape 11 : Afficher le dataframe final
     if st.button("Afficher le dataframe final"):
         df = st.session_state.df
         st.write("Dimensions finales :", df.shape)
+        st.dataframe(df.head()) 
         st.dataframe(df.head())
 
 elif page == pages[4]:
