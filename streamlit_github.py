@@ -1053,8 +1053,6 @@ elif page == pages[6]:
     Grâce à un pré-processing rigoureux incluant la gestion des valeurs manquantes, la création de nouvelles variables comme **“is_blockbuster”** et **“actors_budget_interaction”**, ainsi que l’exploitation de la saisonnalité, nous avons significativement amélioré la qualité des données et leur impact sur les prédictions.
     
     **Les résultats obtenus :**
-    - **Dimensions après filtrage :** (157164, 12)
-    - **Dimensions après suppression des NaN :** (11943, 12)
     - **Score sur Train :** 0.9862
     - **Score sur Test :** 0.7779
     - **MSE :** 2.1050
@@ -1063,8 +1061,9 @@ elif page == pages[6]:
     Ces scores montrent une **forte capacité prédictive**, avec un modèle bien généralisé et un **gain de précision significatif** par rapport aux versions précédentes. L'amélioration du R² sur le jeu de test reflète une meilleure capacité du modèle à expliquer la variance des recettes des films.
     
     **Axes d'amélioration :**
-    Pour aller encore plus loin, nous pourrions explorer **la validation croisée K-Fold**, tester des architectures plus avancées comme **les modèles de deep learning**, ou affiner nos features pour encore mieux capturer les tendances du marché cinématographique.
-    
+    Pour aller encore plus loin, nous pourrions explorer **les réseaux de neurones et architectures de Deep Learning**, qui pourraient mieux capturer les interactions complexes entre les variables et améliorer la robustesse des prédictions.  
+    Une autre piste serait d’**enrichir notre dataset avec des données externes**, comme les tendances des réseaux sociaux ou les notes des critiques, afin d’affiner encore plus la compréhension des facteurs de succès d’un film.  
+    Enfin, une meilleure **modélisation des interactions entre budget, acteurs et popularité** pourrait permettre d’optimiser encore davantage les performances du modèle.
     **Ce projet démontre la puissance des données dans la prise de décisions stratégiques et financières dans l’industrie du cinéma.**
     
     Merci d’avoir suivi cette aventure avec nous ! 
