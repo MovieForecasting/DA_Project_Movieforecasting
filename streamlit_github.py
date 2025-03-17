@@ -1050,8 +1050,7 @@ elif page == pages[5]:
             recettes_millions = recettes_pred[0] / 1e6
             st.success(f"Prédiction (Recettes) : {recettes_millions:.2f} millions de dollars")
 
-if "feedback_data" not in st.session_state:
-st.session_state.feedback_data = []
+
 
 elif page == pages[6]:
     st.image("Matrix.jpg", width=700)
@@ -1069,6 +1068,8 @@ elif page == pages[6]:
 
     **Donne-nous ton avis !**
     """)
+    if "feedback_data" not in st.session_state:
+    st.session_state.feedback_data = []
 
     with st.form(key="feedback_form"):
         st.write("### 📝 Ton retour nous intéresse !")
