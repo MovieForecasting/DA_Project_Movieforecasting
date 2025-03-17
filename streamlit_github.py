@@ -1088,6 +1088,8 @@ elif page == pages[6]:
 
         submit_button = st.form_submit_button(label="Envoyer")
 
+    user_email = st.text_input("Votre email (facultatif, pour recevoir une copie du feedback)")
+
         # ✅ Le bloc if submit_button doit être aligné avec `with st.form(...)`
     if submit_button:
         st.success("✅ Merci pour votre retour ! 🚀")
