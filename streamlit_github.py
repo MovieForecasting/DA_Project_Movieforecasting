@@ -1102,20 +1102,3 @@ elif page == pages[6]:
         st.session_state.feedback_data.append(new_feedback)
 
         st.success("✅ Merci pour ton retour ! 🚀")
-
-    # Affichage des feedbacks en temps réel
-    st.write("### 📊 Résumé des avis reçus :")
-    if len(st.session_state.feedback_data) > 0:
-        df_feedback = pd.DataFrame(st.session_state.feedback_data)
-        st.dataframe(df_feedback)
-
-        # Bouton pour télécharger en CSV
-        csv = df_feedback.to_csv(index=False).encode('utf-8')
-        st.download_button(
-            label="📥 Télécharger les avis en CSV",
-            data=csv,
-            file_name="feedbacks_movie_forecasting.csv",
-            mime="text/csv",
-        )
-    else:
-        st.info("Aucun avis reçu pour le moment.")
