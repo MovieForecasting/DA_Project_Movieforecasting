@@ -1102,7 +1102,7 @@ elif page == pages[6]:
         SMTP_SERVER = "smtp.gmail.com"
         SMTP_PORT = 587
         EMAIL_SENDER = "movieforecastingdatascientest@gmail.com"
-        EMAIL_PASSWORD = "TON_MOT_DE_PASSE_GMAIL"  # Remplace par ton mot de passe ou un mot de passe d'application
+        EMAIL_PASSWORD = "QY!Knx8wYKYFbuRtg^3%"  # Remplace par ton mot de passe ou un mot de passe d'application
         EMAIL_RECEIVER = "movieforecastingdatascientest@gmail.com"  # Envoi vers ton email de projet
 
         # Contenu du mail
