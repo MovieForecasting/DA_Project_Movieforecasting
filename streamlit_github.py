@@ -1069,26 +1069,26 @@ elif page == pages[6]:
     """)
     st.write("Avant de terminer, nous aimerions avoir votre retour sur ce projet. Merci de prendre quelques instants pour répondre à ces questions :")
 
-with st.form(key="feedback_form"):
-    st.write("### 📝 Votre avis nous intéresse !")
+    with st.form(key="feedback_form"):
+        st.write("### 📝 Votre avis nous intéresse !")
 
-    satisfaction = st.radio("Avez-vous trouvé notre projet intéressant ?", ["Oui", "Non"])
-    comprehension = st.radio("Avez-vous compris la méthodologie utilisée ?", ["Oui", "Non"])
-    ml_experience = st.selectbox("Ce projet vous a-t-il fait découvrir de nouvelles choses sur la Data Science et l'IA ?", ["Oui", "Non", "Un peu"])
+        satisfaction = st.radio("Avez-vous trouvé notre projet intéressant ?", ["Oui", "Non"])
+        comprehension = st.radio("Avez-vous compris la méthodologie utilisée ?", ["Oui", "Non"])
+        ml_experience = st.selectbox("Ce projet vous a-t-il fait découvrir de nouvelles choses sur la Data Science et l'IA ?", ["Oui", "Non", "Un peu"])
 
-    # Ajout du slider pour la notation du projet
-    experience_rating = st.slider("Notez votre expérience globale du projet (0 = Pas du tout intéressant, 10 = Excellent)", 0, 10, 7)
+        # Ajout du slider pour la notation du projet
+        experience_rating = st.slider("Notez votre expérience globale du projet (0 = Pas du tout intéressant, 10 = Excellent)", 0, 10, 7)
 
-    improvement_suggestions = st.text_area("Quelles améliorations proposeriez-vous ?")
+        improvement_suggestions = st.text_area("Quelles améliorations proposeriez-vous ?")
 
-    submit_button = st.form_submit_button(label="Envoyer")
+        submit_button = st.form_submit_button(label="Envoyer")
 
-# ✅ Le bloc if submit_button doit être aligné avec `with st.form(...)`
-if submit_button:
-    st.success("✅ Merci pour votre retour ! 🚀")
-    st.write("### Récapitulatif de vos réponses :")
-    st.write(f"**Projet intéressant ?** {satisfaction}")
-    st.write(f"**Méthodologie comprise ?** {comprehension}")
-    st.write(f"**Découverte de nouvelles choses sur la Data Science et l'IA ?** {ml_experience}")
-    st.write(f"**Note du projet :** {experience_rating}/10")
-    st.write(f"**Suggestions d'amélioration :** {improvement_suggestions if improvement_suggestions else 'Aucune'}")
+        # ✅ Le bloc if submit_button doit être aligné avec `with st.form(...)`
+    if submit_button:
+        st.success("✅ Merci pour votre retour ! 🚀")
+        st.write("### Récapitulatif de vos réponses :")
+        st.write(f"**Projet intéressant ?** {satisfaction}")
+        st.write(f"**Méthodologie comprise ?** {comprehension}")
+        st.write(f"**Découverte de nouvelles choses sur la Data Science et l'IA ?** {ml_experience}")
+        st.write(f"**Note du projet :** {experience_rating}/10")
+        st.write(f"**Suggestions d'amélioration :** {improvement_suggestions if improvement_suggestions else 'Aucune'}")
