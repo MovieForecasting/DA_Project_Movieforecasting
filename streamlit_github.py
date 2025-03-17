@@ -557,34 +557,33 @@ elif page == pages[3]:
         st.write("Dimensions après filtrage :", df.shape)
         st.session_state.df = df
 
- # Étape 3 : Vérification et suppression des valeurs manquantes
-    if st.button("Vérifier et supprimer les NaN"):
-        df = st.session_state.df
-        if df is not None:
-            # Calcul du taux de NaN pour chaque colonne
-            nan_percent = (df.isna().sum() / len(df)) * 100
-            st.write("### Taux de NaN (%) par colonne :")
-            st.table(nan_percent.reset_index().rename(columns={'index': 'Colonne', 0: 'Pourcentage'}))
-
-            # Stocker les lignes contenant au moins un NaN dans st.session_state
-            df_nan = df[df.isna().any(axis=1)]
-            st.session_state.df_nan = df_nan
-
-            # Option d'afficher un aperçu des lignes contenant des NaN
-            if st.checkbox("Afficher un aperçu des lignes avec des NaN"):
-                if not df_nan.empty:
-                    st.write("Aperçu des lignes contenant des NaN :")
-                    st.dataframe(df_nan.head())
-                else:
-                    st.info("Aucune ligne contenant des NaN n'a été trouvée.")
-
-            # Suppression des lignes avec 3 NaN ou plus et des lignes sans 'Recettes'
-            df_clean = df.loc[(df.isna().sum(axis=1)) < 3].dropna(subset=['Recettes'])
-            st.write("Dimensions après suppression des lignes problématiques :", df_clean.shape)
-            st.write("Nombre de lignes supprimées :", df.shape[0] - df_clean.shape[0])
-            st.session_state.df = df_clean
-        else:
-            st.warning("Le dataset n'est pas chargé. Veuillez charger les données d'abord.")
+    # Étape 3 : Vérification et suppression des valeurs manquantes
+    df = st.session_state.df
+    if df is not None:
+        # Calcul du taux de NaN pour chaque colonne
+        nan_percent = (df.isna().sum() / len(df)) * 100
+        st.write("### Taux de NaN (%) par colonne :")
+        st.table(nan_percent.reset_index().rename(columns={'index': 'Colonne', 0: 'Pourcentage'}))
+ 
+        # Stocker les lignes contenant au moins un NaN dans st.session_state
+        df_nan = df[df.isna().any(axis=1)]
+        st.session_state.df_nan = df_nan
+ 
+        # Option d'afficher un aperçu des lignes contenant des NaN
+        if st.checkbox("Afficher un aperçu des lignes avec des NaN"):
+            if not df_nan.empty:
+                st.write("Aperçu des lignes contenant des NaN :")
+                st.dataframe(df_nan.head())
+            else:
+                st.info("Aucune ligne contenant des NaN n'a été trouvée.")
+ 
+        # Suppression des lignes avec 3 NaN ou plus et des lignes sans 'Recettes'
+        df_clean = df.loc[(df.isna().sum(axis=1)) < 3].dropna(subset=['Recettes'])
+        st.write("Dimensions après suppression des lignes problématiques :", df_clean.shape)
+        st.write("Nombre de lignes supprimées :", df.shape[0] - df_clean.shape[0])
+        st.session_state.df = df_clean
+    else:
+        st.warning("Le dataset n'est pas chargé. Veuillez charger les données d'abord.")
 
     # Étape 4 : Extraction des informations temporelles
     if st.button("Extraction des informations temporelles"):
