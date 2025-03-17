@@ -1083,7 +1083,8 @@ elif page == pages[6]:
 
     submit_button = st.form_submit_button(label="Envoyer")
 
-    if submit_button:
+# ✅ Le bloc if submit_button doit être aligné avec `with st.form(...)`
+if submit_button:
     st.success("✅ Merci pour votre retour ! 🚀")
     st.write("### Récapitulatif de vos réponses :")
     st.write(f"**Projet intéressant ?** {satisfaction}")
