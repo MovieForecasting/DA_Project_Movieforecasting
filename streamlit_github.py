@@ -13,9 +13,11 @@ from sklearn.ensemble import RandomForestRegressor
 import joblib
 import requests
 import io
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+import csv
+import os
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
 
 # Base URL for GitHub raw files
 github_base_url = "https://raw.githubusercontent.com/MovieForecasting/DA_Project_Movieforecasting/main/"
@@ -1047,101 +1049,68 @@ elif page == pages[5]:
             # Affichage en millions
             recettes_millions = recettes_pred[0] / 1e6
             st.success(f"Prédiction (Recettes) : {recettes_millions:.2f} millions de dollars")
+
+if "feedback_data" not in st.session_state:
+st.session_state.feedback_data = []
+
 elif page == pages[6]:
     st.image("Matrix.jpg", width=700)
-    
+
     st.write("## Conclusion")
     st.write("""
     Nous avons mis en place un modèle performant pour prédire les recettes des films en combinant **un traitement avancé des données** et **un modèle optimisé de Machine Learning**.
-    
-    Grâce à un pré-processing rigoureux incluant la gestion des valeurs manquantes, la création de nouvelles variables comme **“is_blockbuster”** et **“actors_budget_interaction”**, ainsi que l’exploitation de la saisonnalité, nous avons significativement amélioré la qualité des données et leur impact sur les prédictions.
-    
-    **Les résultats obtenus :**
-    - **Score sur Train :** 0.9862
-    - **Score sur Test :** 0.7779
-    - **MSE :** 2.1050
-    - **R² :** 0.7779
-    
-    Ces scores montrent une **forte capacité prédictive**, avec un modèle bien généralisé et un **gain de précision significatif** par rapport aux versions précédentes. L'amélioration du R² sur le jeu de test reflète une meilleure capacité du modèle à expliquer la variance des recettes des films.
-    
-    **Axes d'amélioration :**
-    Pour aller encore plus loin, nous pourrions explorer **les réseaux de neurones et architectures de Deep Learning**, qui pourraient mieux capturer les interactions complexes entre les variables et améliorer la robustesse des prédictions.  
-    Une autre piste serait d’**enrichir notre dataset avec des données externes**, comme les tendances des réseaux sociaux ou les notes des critiques, afin d’affiner encore plus la compréhension des facteurs de succès d’un film.  
-    Enfin, une meilleure **modélisation des interactions entre budget, acteurs et popularité** pourrait permettre d’optimiser encore davantage les performances du modèle.
-    **Ce projet démontre la puissance des données dans la prise de décisions stratégiques et financières dans l’industrie du cinéma.**
-     
+
+    **Score sur Train :** 0.9862  
+    **Score sur Test :** 0.7779  
+    **MSE :** 2.1050  
+    **R² :** 0.7779  
+
+    Ce projet démontre la puissance des données dans l’industrie du cinéma.
+
+    **Donne-nous ton avis !**
     """)
-    st.write("Avant de terminer, nous aimerions avoir votre retour sur ce projet. Merci de prendre quelques instants pour répondre à ces questions :")
 
     with st.form(key="feedback_form"):
-        st.write("### 📝 Votre avis nous intéresse !")
+        st.write("### 📝 Ton retour nous intéresse !")
 
-        user_email = st.text_input("Votre adresse email :", placeholder="exemple@email.com")
-        satisfaction = st.radio("Avez-vous trouvé notre projet intéressant ?", ["Oui", "Non"])
-        comprehension = st.radio("Avez-vous compris la méthodologie utilisée ?", ["Oui", "Non"])
-        ml_experience = st.selectbox("Ce projet vous a-t-il fait découvrir de nouvelles choses sur la Data Science et l'IA ?", ["Oui", "Non", "Un peu"])
+        satisfaction = st.radio("As-tu trouvé notre projet intéressant ?", ["Oui", "Non"])
+        comprehension = st.radio("As-tu compris la méthodologie utilisée ?", ["Oui", "Non"])
+        ml_experience = st.selectbox("As-tu découvert de nouvelles choses sur la Data Science ?", ["Oui", "Non", "Un peu"])
 
-        # Ajout du slider pour la notation du projet
-        experience_rating = st.slider("Notez votre expérience globale du projet (0 = Pas du tout intéressant, 10 = Excellent)", 0, 10, 7)
+        # Note sur 10
+        experience_rating = st.slider("Note ton expérience (0 = Pas du tout intéressant, 10 = Excellent)", 0, 10, 7)
 
-        improvement_suggestions = st.text_area("Quelles améliorations proposeriez-vous ?")
+        # Suggestions d'amélioration
+        improvement_suggestions = st.text_area("Des idées d'amélioration ?")
 
         submit_button = st.form_submit_button(label="Envoyer")
 
-    user_email = st.text_input("Votre email (facultatif, pour recevoir une copie du feedback)")
-
-        # ✅ Le bloc if submit_button doit être aligné avec `with st.form(...)`
     if submit_button:
-        st.success("✅ Merci pour votre retour ! 🚀")
-        st.write("### Récapitulatif de vos réponses :")
-        st.write(f"**Projet intéressant ?** {satisfaction}")
-        st.write(f"**Méthodologie comprise ?** {comprehension}")
-        st.write(f"**Découverte de nouvelles choses sur la Data Science et l'IA ?** {ml_experience}")
-        st.write(f"**Note du projet :** {experience_rating}/10")
-        st.write(f"**Suggestions d'amélioration :** {improvement_suggestions if improvement_suggestions else 'Aucune'}")
+        # Ajout du feedback dans la session
+        new_feedback = {
+            "Projet intéressant": satisfaction,
+            "Méthodologie comprise": comprehension,
+            "Nouvelles découvertes": ml_experience,
+            "Note": experience_rating,
+            "Suggestions": improvement_suggestions if improvement_suggestions else "Aucune"
+        }
+        st.session_state.feedback_data.append(new_feedback)
 
-        # 📩 Configuration de l'email
-        SMTP_SERVER = "smtp.gmail.com"
-        SMTP_PORT = 587
-        EMAIL_SENDER = "movieforecastingdatascientest@gmail.com"
-        EMAIL_PASSWORD = "QY!Knx8wYKYFbuRtg^3%"  # Remplace par ton mot de passe ou un mot de passe d'application
-        EMAIL_RECEIVER = "movieforecastingdatascientest@gmail.com"  # Envoi vers ton email de projet
+        st.success("✅ Merci pour ton retour ! 🚀")
 
-        # Contenu du mail
-        email_content = f"""
-        <h2>📊 Feedback reçu sur le projet Movie Forecasting</h2>
-        <p><b>Projet intéressant ?</b> {satisfaction}</p>
-        <p><b>Méthodologie comprise ?</b> {comprehension}</p>
-        <p><b>Découverte IA / Data Science ?</b> {ml_experience}</p>
-        <p><b>Note du projet :</b> {experience_rating}/10</p>
-        <p><b>Suggestions :</b> {improvement_suggestions if improvement_suggestions else 'Aucune'}</p>
-        <p>Merci encore pour votre participation ! 🚀</p>
-        """
+    # Affichage des feedbacks en temps réel
+    st.write("### 📊 Résumé des avis reçus :")
+    if len(st.session_state.feedback_data) > 0:
+        df_feedback = pd.DataFrame(st.session_state.feedback_data)
+        st.dataframe(df_feedback)
 
-        try:
-            message = MIMEMultipart()
-            message["From"] = EMAIL_SENDER
-            message["To"] = EMAIL_RECEIVER
-            message["Subject"] = "📊 Nouveau feedback sur Movie Forecasting"
-            message.attach(MIMEText(email_content, "html"))
-
-            server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-            server.starttls()
-            server.login(EMAIL_SENDER, EMAIL_PASSWORD)
-            server.send_message(message)
-            server.quit()
-            st.success("📩 Feedback envoyé avec succès à l'équipe !")
-
-        # 📩 Envoi d'un email de confirmation à l'utilisateur s'il a fourni un email
-            if user_email:
-                message["To"] = user_email
-                message["Subject"] = "✅ Merci pour votre feedback sur Movie Forecasting"
-                server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-                server.starttls()
-                server.login(EMAIL_SENDER, EMAIL_PASSWORD)
-                server.send_message(message)
-                server.quit()
-                st.success("📩 Un email de confirmation a été envoyé à l'utilisateur.")
-
-        except Exception as e:
-            st.error(f"❌ Erreur lors de l'envoi du mail : {e}")
+        # Bouton pour télécharger en CSV
+        csv = df_feedback.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="📥 Télécharger les avis en CSV",
+            data=csv,
+            file_name="feedbacks_movie_forecasting.csv",
+            mime="text/csv",
+        )
+    else:
+        st.info("Aucun avis reçu pour le moment.")
