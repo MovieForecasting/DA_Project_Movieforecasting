@@ -1046,56 +1046,26 @@ elif page == pages[5]:
 elif page == pages[6]:
     st.image("Matrix.jpg", width=700)
     
-    # Ajout d'une animation CSS pour le texte de conclusion
-    st.markdown(
-        """
-        <style>
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        .animated-text {
-            animation: fadeIn 2s ease-in-out;
-            font-size: 18px;
-            line-height: 1.6;
-            color: #ffffff;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: justify;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    st.write("## Conclusion 🎬")
+    st.write("""
+    Nous avons mis en place un modèle performant pour prédire les recettes des films en combinant **un traitement avancé des données** et **un modèle optimisé de Machine Learning**.
     
-    # Ajout d'un GIF animé pour un effet visuel dynamique
-    st.image("https://media.giphy.com/media/xT1XGzXhVgWRLN02Lc/giphy.gif", width=500)
+    Grâce à un pré-processing rigoureux incluant la gestion des valeurs manquantes, la création de nouvelles variables comme **“is_blockbuster”** et **“actors_budget_interaction”**, ainsi que l’exploitation de la saisonnalité, nous avons significativement amélioré la qualité des données et leur impact sur les prédictions.
     
-    st.markdown(
-        """
-        <div class="animated-text">
-        Nous avons mis en place un modèle performant pour prédire les recettes des films en combinant **un traitement avancé des données** et **un modèle optimisé de Machine Learning**.  
-        <br><br>
-        Grâce à un pré-processing rigoureux incluant la gestion des valeurs manquantes, la création de nouvelles variables comme **“is_blockbuster”** et **“actors_budget_interaction”**, ainsi que l’exploitation de la saisonnalité, nous avons significativement amélioré la qualité des données et leur impact sur les prédictions.
-        <br><br>
-        🚀 **Les résultats obtenus :**
-        - **Dimensions après filtrage :** (157164, 12)
-        - **Dimensions après suppression des NaN :** (11943, 12)
-        - **Score sur Train :** 0.9862
-        - **Score sur Test :** 0.7779
-        - **MSE :** 2.1050
-        - **R² :** 0.7779
-        <br><br>
-        Ces scores montrent une **forte capacité prédictive**, avec un modèle bien généralisé et un **gain de précision significatif** par rapport aux versions précédentes. L'amélioration du R² sur le jeu de test reflète une meilleure capacité du modèle à expliquer la variance des recettes des films.
-        <br><br>
-        💡 **Axes d'amélioration** :  
-        Pour aller encore plus loin, nous pourrions explorer **la validation croisée K-Fold**, tester des architectures plus avancées comme **les modèles de deep learning**, ou affiner nos features pour encore mieux capturer les tendances du marché cinématographique.
-        <br><br>
-        🎬 **Ce projet démontre la puissance des données dans la prise de décisions stratégiques et financières dans l’industrie du cinéma.**
-        <br><br>
-        Merci d’avoir suivi cette aventure avec nous ! 🚀🎥
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    **Les résultats obtenus :**
+    - **Dimensions après filtrage :** (157164, 12)
+    - **Dimensions après suppression des NaN :** (11943, 12)
+    - **Score sur Train :** 0.9862
+    - **Score sur Test :** 0.7779
+    - **MSE :** 2.1050
+    - **R² :** 0.7779
+    
+    Ces scores montrent une **forte capacité prédictive**, avec un modèle bien généralisé et un **gain de précision significatif** par rapport aux versions précédentes. L'amélioration du R² sur le jeu de test reflète une meilleure capacité du modèle à expliquer la variance des recettes des films.
+    
+    **Axes d'amélioration :**
+    Pour aller encore plus loin, nous pourrions explorer **la validation croisée K-Fold**, tester des architectures plus avancées comme **les modèles de deep learning**, ou affiner nos features pour encore mieux capturer les tendances du marché cinématographique.
+    
+    **Ce projet démontre la puissance des données dans la prise de décisions stratégiques et financières dans l’industrie du cinéma.**
+    
+    Merci d’avoir suivi cette aventure avec nous ! 
+    """)
