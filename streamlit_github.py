@@ -970,7 +970,7 @@ elif page == pages[5]:
         # Conversion du choix en code langue (ex: "Anglais" → "en")
         original_language = [key for key, value in languages.items() if value == selected_language][0]
         import datetime
-        release_date = st.date_input("Date de sortie :", value=datetime.date(2017, 12, 15))
+        release_date = st.date_input("Date de sortie :", value=datetime.date(2024, 05, 22))
         Budget = st.number_input("Budget (en dollars):", min_value=0, value=170000000)
         Director = st.text_input("Nom du réalisateur:", value="George Miller")
         Actors = st.text_input("Liste des acteurs (séparés par une virgule):", value="Anya Taylor-Joy, Chris Hemsworth, Tom Burke")
