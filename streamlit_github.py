@@ -971,9 +971,9 @@ elif page == pages[5]:
         original_language = [key for key, value in languages.items() if value == selected_language][0]
         import datetime
         release_date = st.date_input("Date de sortie :", value=datetime.date(2017, 12, 15))
-        Budget = st.number_input("Budget (en dollars):", min_value=0, value=317000000)
-        Director = st.text_input("Nom du réalisateur:", value="Rian Johnson")
-        Actors = st.text_input("Liste des acteurs (séparés par une virgule):", value="Daisy Ridley, John Boyega, Adam Driver")
+        Budget = st.number_input("Budget (en dollars):", min_value=0, value=170000000)
+        Director = st.text_input("Nom du réalisateur:", value="George Miller")
+        Actors = st.text_input("Liste des acteurs (séparés par une virgule):", value="Anya Taylor-Joy, Chris Hemsworth, Tom Burke")
         genres = ["Action", "Aventure", "Comédie", "Drame", "Science Fiction", "Horreur", "Romance", "Thriller", "Animation", "Documentaire"]
         Genres_clean = st.selectbox("Genre principal:", options=genres, index=genres.index("Science Fiction"))
         popularity_options = [
@@ -1091,14 +1091,12 @@ elif page == pages[6]:
         submit_button = st.form_submit_button(label="Envoyer")
 
     if submit_button:
-        # Ajout du feedback dans la session
-        new_feedback = {
-            "Projet intéressant": satisfaction,
-            "Méthodologie comprise": comprehension,
-            "Nouvelles découvertes": ml_experience,
-            "Note": experience_rating,
-            "Suggestions": improvement_suggestions if improvement_suggestions else "Aucune"
-        }
-        st.session_state.feedback_data.append(new_feedback)
+        st.success("✅ Merci pour ton retour ! 🚀")
+        st.write("### 📩 Ton feedback a bien été envoyé !")
+        st.write(f"**Projet intéressant ?** {satisfaction}")
+        st.write(f"**Méthodologie comprise ?** {comprehension}")
+        st.write(f"**Découverte de nouvelles choses sur la Data Science ?** {ml_experience}")
+        st.write(f"**Note du projet :** {experience_rating}/10")
+        st.write(f"**Suggestions d'amélioration :** {improvement_suggestions if improvement_suggestions else 'Aucune'}")
 
         st.success("✅ Merci pour ton retour ! 🚀")
