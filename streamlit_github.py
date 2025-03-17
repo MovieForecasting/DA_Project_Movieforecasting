@@ -1052,10 +1052,11 @@ elif page == pages[5]:
 
 
 
-f "feedback_data" not in st.session_state:
-    st.session_state.feedback_data = []
+
 
 elif page == pages[6]:
+    f "feedback_data" not in st.session_state:
+    st.session_state.feedback_data = []
     st.image("Matrix.jpg", width=700)
 
     st.write("## Conclusion")
