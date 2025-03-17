@@ -1046,7 +1046,7 @@ elif page == pages[5]:
 elif page == pages[6]:
     st.image("Matrix.jpg", width=700)
     
-    st.write("## Conclusion 🎬")
+    st.write("## Conclusion")
     st.write("""
     Nous avons mis en place un modèle performant pour prédire les recettes des films en combinant **un traitement avancé des données** et **un modèle optimisé de Machine Learning**.
     
