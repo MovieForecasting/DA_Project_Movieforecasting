@@ -586,18 +586,6 @@ elif page == pages[3]:
         else:
             st.warning("Le dataset n'est pas chargé. Veuillez charger les données d'abord.")
 
-
-        # Option d'afficher un aperçu des lignes contenant des NaN
-        if st.checkbox("Afficher un aperçu des lignes avec des NaN"):
-            df_nan = df[df.isna().any(axis=1)]
-            st.dataframe(df_nan.head())
-
-        # Suppression des lignes avec 3 NaN ou plus et des lignes sans 'Recettes'
-        df_clean = df.loc[(df.isna().sum(axis=1)) < 3].dropna(subset=['Recettes'])
-        st.write("Dimensions après suppression des lignes problématiques :", df_clean.shape)
-        st.write("Nombre de lignes supprimées :", df.shape[0] - df_clean.shape[0])
-        st.session_state.df = df_clean
-
     # Étape 4 : Extraction des informations temporelles
     if st.button("Extraction des informations temporelles"):
         df = st.session_state.df
