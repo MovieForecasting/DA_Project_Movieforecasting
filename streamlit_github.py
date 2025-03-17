@@ -13,10 +13,6 @@ from sklearn.ensemble import RandomForestRegressor
 import joblib
 import requests
 import io
-import csv
-import os
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 
 
 # Base URL for GitHub raw files
