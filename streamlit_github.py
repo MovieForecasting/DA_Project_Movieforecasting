@@ -669,8 +669,7 @@ elif page == pages[3]:
     if st.button("Afficher le dataframe final"):
         df = st.session_state.df
         st.write("Dimensions finales :", df.shape)
-        st.dataframe(df.head()) 
-        st.dataframe(df.head())
+        st.dataframe(df.head(10))
 
 elif page == pages[4]:
     import pandas as pd
