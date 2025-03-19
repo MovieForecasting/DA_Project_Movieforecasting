@@ -19,7 +19,7 @@ import io
 github_base_url = "https://raw.githubusercontent.com/MovieForecasting/DA_Project_Movieforecasting/main/"
 from sklearn.metrics import r2_score
 
-st.set_page_config(page_title="", page_icon="")
+st.set_page_config(page_title="Prévision du succès d'un film", page_icon="🎥")
 st.markdown(
     """
     <style>
@@ -91,26 +91,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-# Sidebar
-st.sidebar.title(t["sidebar_title"])
-st.sidebar.write(f"📆 {t['promotion']}")
-st.sidebar.write(f"👥 {t['authors']}")
-
-# Navigation dynamique
-pages = [
-    t["presentation"], 
-    t["dataset_exploration"], 
-    t["dataviz"], 
-    t["preprocessing"], 
-    t["modelling"], 
-    t["application"], 
-    t["conclusion"]
-]
-page = st.sidebar.radio(t["summary"], pages)
-
-st.write(t["description"])
-
+df_exploration = pd.read_csv("df_github.csv")
 
 buffer = StringIO()
 df_exploration.info(buf=buffer)
@@ -121,6 +102,7 @@ df_exploration['release_date'] = pd.to_datetime(df_exploration['release_date'], 
 df_until_2023 = df_exploration[df_exploration['release_date'].dt.year <= 2023].copy()
 df_until_2023_sorted = df_until_2023.sort_values(by='popularity', ascending=False)
 
+st.title("Prévision du succès d'un film")
 
 image_path = "logo_datascientest.png"
 st.sidebar.image(image_path, width=180)
