@@ -91,6 +91,132 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# 🌍 Sélection de la langue
+translations = {
+    "Français": {
+        "title": "Prévision du succès d'un film 🎬",
+        "description": "Entrez les informations du film et découvrez s'il sera un succès !",
+        "sidebar_title": "Options de configuration",
+        "select_language": "🌐 Choisir la langue / Select Language",
+        "dataset_exploration": "Exploration du Dataset 🧐",
+        "dataviz": "DataViz' 📊",
+        "preprocessing": "Pré-processing 👨‍💻",
+        "modelling": "Modélisation / Machine Learning ⚙️",
+        "application": "Application 🎥",
+        "conclusion": "Conclusion 🎬",
+    },
+    "English": {
+        "title": "Movie Success Prediction 🎬",
+        "description": "Enter movie details and find out if it will be a hit!",
+        "sidebar_title": "Configuration Options",
+        "select_language": "🌐 Select Language",
+        "dataset_exploration": "Dataset Exploration 🧐",
+        "dataviz": "DataViz' 📊",
+        "preprocessing": "Pre-processing 👨‍💻",
+        "modelling": "Modelling / Machine Learning ⚙️",
+        "application": "Application 🎥",
+        "conclusion": "Conclusion 🎬",
+    }
+}
+
+lang = st.sidebar.selectbox("🌐 Choisir la langue / Select Language", ["Français", "English"])
+t = translations[lang]
+
+# 🎬 Interface utilisateur
+st.title(t["title"])
+st.write(t["description"])
+
+# Sidebar
+st.sidebar.title(t["sidebar_title"])
+
+# Navigation dynamique
+pages = [
+    t["dataset_exploration"],
+    t["dataviz"],
+    t["preprocessing"],
+    t["modelling"],
+    t["application"],
+    t["conclusion"]
+]
+page = st.sidebar.radio("Sommaire", pages)
+
+if page == t["dataset_exploration"]:
+    st.write("### Exploration du Dataset")
+    df_exploration = pd.read_csv(github_base_url + "df_github.csv")
+    st.dataframe(df_exploration.head())
+
+elif page == t["dataviz"]:
+    st.write("### Visualisation des données")
+    df_viz = pd.read_csv(github_base_url + "df_github.csv")
+    fig, ax = plt.subplots()
+    sns.histplot(df_viz["popularity"], bins=30, ax=ax)
+    st.pyplot(fig)
+
+elif page == t["preprocessing"]:
+    st.write("### Pré-processing des données")
+    df = pd.read_csv(github_base_url + "df_github.csv")
+    df.dropna(inplace=True)
+    st.write("Données après suppression des valeurs manquantes:")
+    st.dataframe(df.head())
+
+elif page == t["modelling"]:
+    st.write("### Modélisation et Machine Learning")
+    df = pd.read_csv(github_base_url + "df_github.csv")
+    df = df.dropna()
+    X = df.drop("Recettes", axis=1)
+    y = df["Recettes"]
+    model = joblib.load(github_base_url + "model.joblib")
+    st.write("Modèle chargé avec succès !")
+
+elif page == t["application"]:
+    st.write("### 🎥 Application de prédiction")
+    joblib_url = "https://github.com/MovieForecasting/DA_Project_Movieforecasting/releases/download/JR/pipeline.joblib"
+    response = requests.get(joblib_url)
+    pipeline = joblib.load(io.BytesIO(response.content))
+    
+    with st.form("prediction_form"):
+        title = st.text_input("Titre du film")
+        budget = st.number_input("Budget (en dollars)", min_value=0)
+        genre = st.text_input("Genre du film")
+        director = st.text_input("Réalisateur")
+        actors = st.text_input("Acteurs principaux")
+        popularity = st.slider("Popularité", 0, 10000, 5000)
+        submitted = st.form_submit_button("Prédire les recettes")
+        
+        if submitted:
+            df_new = pd.DataFrame({
+                "title": [title],
+                "Budget": [budget],
+                "Genres_clean": [genre],
+                "Director": [director],
+                "Actors": [actors],
+                "popularity": [popularity]
+            })
+            prediction = pipeline["model"].predict(df_new)
+            recettes_pred = np.expm1(prediction)
+            st.success(f"Prédiction des recettes : {recettes_pred[0]:,.2f} $")
+
+elif page == t["conclusion"]:
+    st.write("### Conclusion 🎬")
+    st.write("Ce projet démontre la puissance des données pour prédire le succès d'un film.")
+
+
+# Sidebar
+st.sidebar.title(t["sidebar_title"])
+st.sidebar.write(f"📆 {t['promotion']}")
+st.sidebar.write(f"👥 {t['authors']}")
+
+# Navigation dynamique
+pages = [
+    t["presentation"], 
+    t["dataset_exploration"], 
+    t["dataviz"], 
+    t["preprocessing"], 
+    t["modelling"], 
+    t["application"], 
+    t["conclusion"]
+]
+page = st.sidebar.radio(t["summary"], pages)
 
 st.write(t["description"])
 
