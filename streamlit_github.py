@@ -91,48 +91,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# 🌍 Sélection de la langue
-lang = st.selectbox("🌐 Choisir la langue / Select Language", ["Français", "English"])
 
-# 📌 Dictionnaire des traductions
-translations = {
-    "Français": {
-        "title": "Prévision du succès d'un film 🎬",
-        "description": "Entrez les informations du film et découvrez s'il sera un succès !",
-        "input_movie": "Nom du film",
-        "input_budget": "Budget du film ($)",
-        "input_genre": "Genre du film",
-        "input_actor": "Acteur principal",
-        "button_predict": "Prédire le succès",
-        "prediction_result": "Résultat de la prédiction",
-        "error_message": "Veuillez entrer toutes les informations requises.",
-        "success_message": "🎉 Succès probable !",
-        "fail_message": "💀 Échec probable...",
-        "sidebar_title": "Options de configuration",
-        "select_language": "🌐 Choisir la langue / Select Language"
-    },
-    "English": {
-        "title": "Movie Success Prediction 🎬",
-        "description": "Enter movie details and find out if it will be a hit!",
-        "input_movie": "Movie Name",
-        "input_budget": "Movie Budget ($)",
-        "input_genre": "Movie Genre",
-        "input_actor": "Main Actor",
-        "button_predict": "Predict Success",
-        "prediction_result": "Prediction Result",
-        "error_message": "Please enter all required information.",
-        "success_message": "🎉 Likely a hit!",
-        "fail_message": "💀 Likely a flop...",
-        "sidebar_title": "Configuration Options",
-        "select_language": "🌐 Select Language"
-    }
-}
-
-# 📌 Appliquer la langue sélectionnée
-t = translations[lang]
-
-# 🎬 Interface utilisateur
-st.title(t["title"])
 st.write(t["description"])
 
 
