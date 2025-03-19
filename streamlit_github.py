@@ -135,25 +135,6 @@ t = translations[lang]
 st.title(t["title"])
 st.write(t["description"])
 
-# 📌 **Sidebar pour config**
-with st.sidebar:
-    st.header(t["sidebar_title"])
-    lang = st.selectbox(t["select_language"], ["Français", "English"])  # Langue dans la sidebar aussi
-    t = translations[lang]  # Recharger la traduction après choix
-
-# 📊 Inputs utilisateur (TOUT traduit)
-movie_name = st.text_input(t["input_movie"])
-budget = st.number_input(t["input_budget"], min_value=0)
-genre = st.selectbox(t["input_genre"], ["Action", "Comédie", "Drame", "Science-fiction"])
-actor = st.text_input(t["input_actor"])
-
-# 🚀 Bouton de prédiction
-if st.button(t["button_predict"]):
-    if movie_name and budget and actor:
-        st.success(f"{t['prediction_result']} : {t['success_message']}")  # Affichage dynamique succès
-    else:
-        st.error(t["error_message"])  # Message d'erreur dynamique
-df_exploration = pd.read_csv(github_base_url + "df_github.csv")
 
 buffer = StringIO()
 df_exploration.info(buf=buffer)
