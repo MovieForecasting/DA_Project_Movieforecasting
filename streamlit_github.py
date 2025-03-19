@@ -91,6 +91,42 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# 🌍 Sélection de la langue
+lang = st.selectbox("🌐 Choisir la langue / Select Language", ["Français", "English"])
+
+# 📌 Dictionnaire de traductions
+translations = {
+    "Français": {
+        "title": "Prévision du succès d'un film 🎬",
+        "description": "Entrez les informations du film et découvrez s'il sera un succès !",
+        "input_movie": "Nom du film",
+        "input_budget": "Budget du film ($)",
+        "input_genre": "Genre du film",
+        "input_actor": "Acteur principal",
+        "button_predict": "Prédire le succès",
+        "prediction_result": "Résultat de la prédiction",
+        "error_message": "Veuillez entrer toutes les informations requises."
+    },
+    "English": {
+        "title": "Movie Success Prediction 🎬",
+        "description": "Enter movie details and find out if it will be a hit!",
+        "input_movie": "Movie Name",
+        "input_budget": "Movie Budget ($)",
+        "input_genre": "Movie Genre",
+        "input_actor": "Main Actor",
+        "button_predict": "Predict Success",
+        "prediction_result": "Prediction Result",
+        "error_message": "Please enter all required information."
+    }
+}
+
+# 📌 Appliquer la langue sélectionnée
+t = translations[lang]
+
+# 🎬 Interface utilisateur avec traduction dynamique
+st.title(t["title"])
+st.write(t["description"])
+
 df_exploration = pd.read_csv(github_base_url + "df_github.csv")
 
 buffer = StringIO()
