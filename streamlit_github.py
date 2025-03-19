@@ -122,6 +122,12 @@ translations = {
 lang = st.sidebar.selectbox("🌐 Choisir la langue / Select Language", ["Français", "English"])
 t = translations[lang]
 
+# Vérifier si la clé 'promotion' existe avant de l'utiliser
+if 'promotion' in t:
+    st.sidebar.write(f"📆 {t['promotion']}")
+else:
+    st.sidebar.write("📆 Data Analyst Promotion: January 2025")  # Valeur par défaut en cas d'erreur
+
 # 🎬 Interface utilisateur
 st.title(t["title"])
 st.write(t["description"])
