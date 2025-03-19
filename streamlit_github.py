@@ -138,7 +138,6 @@ df_exploration['release_date'] = pd.to_datetime(df_exploration['release_date'], 
 df_until_2023 = df_exploration[df_exploration['release_date'].dt.year <= 2023].copy()
 df_until_2023_sorted = df_until_2023.sort_values(by='popularity', ascending=False)
 
-st.title("Prévision du succès d'un film")
 
 image_path = "logo_datascientest.png"
 st.sidebar.image(image_path, width=180)
