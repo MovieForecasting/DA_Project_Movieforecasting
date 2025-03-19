@@ -19,7 +19,7 @@ import io
 github_base_url = "https://raw.githubusercontent.com/MovieForecasting/DA_Project_Movieforecasting/main/"
 from sklearn.metrics import r2_score
 
-st.set_page_config(page_title="Prévision du succès d'un film", page_icon="🎥")
+st.set_page_config(page_title="", page_icon="")
 st.markdown(
     """
     <style>
