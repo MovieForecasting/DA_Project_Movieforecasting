@@ -94,7 +94,7 @@ st.markdown(
 # 🌍 Sélection de la langue
 lang = st.selectbox("🌐 Choisir la langue / Select Language", ["Français", "English"])
 
-# 📌 Dictionnaire de traductions
+# 📌 Dictionnaire des traductions
 translations = {
     "Français": {
         "title": "Prévision du succès d'un film 🎬",
@@ -105,7 +105,11 @@ translations = {
         "input_actor": "Acteur principal",
         "button_predict": "Prédire le succès",
         "prediction_result": "Résultat de la prédiction",
-        "error_message": "Veuillez entrer toutes les informations requises."
+        "error_message": "Veuillez entrer toutes les informations requises.",
+        "success_message": "🎉 Succès probable !",
+        "fail_message": "💀 Échec probable...",
+        "sidebar_title": "Options de configuration",
+        "select_language": "🌐 Choisir la langue / Select Language"
     },
     "English": {
         "title": "Movie Success Prediction 🎬",
@@ -116,17 +120,39 @@ translations = {
         "input_actor": "Main Actor",
         "button_predict": "Predict Success",
         "prediction_result": "Prediction Result",
-        "error_message": "Please enter all required information."
+        "error_message": "Please enter all required information.",
+        "success_message": "🎉 Likely a hit!",
+        "fail_message": "💀 Likely a flop...",
+        "sidebar_title": "Configuration Options",
+        "select_language": "🌐 Select Language"
     }
 }
 
 # 📌 Appliquer la langue sélectionnée
 t = translations[lang]
 
-# 🎬 Interface utilisateur avec traduction dynamique
+# 🎬 Interface utilisateur
 st.title(t["title"])
 st.write(t["description"])
 
+# 📌 **Sidebar pour config**
+with st.sidebar:
+    st.header(t["sidebar_title"])
+    lang = st.selectbox(t["select_language"], ["Français", "English"])  # Langue dans la sidebar aussi
+    t = translations[lang]  # Recharger la traduction après choix
+
+# 📊 Inputs utilisateur (TOUT traduit)
+movie_name = st.text_input(t["input_movie"])
+budget = st.number_input(t["input_budget"], min_value=0)
+genre = st.selectbox(t["input_genre"], ["Action", "Comédie", "Drame", "Science-fiction"])
+actor = st.text_input(t["input_actor"])
+
+# 🚀 Bouton de prédiction
+if st.button(t["button_predict"]):
+    if movie_name and budget and actor:
+        st.success(f"{t['prediction_result']} : {t['success_message']}")  # Affichage dynamique succès
+    else:
+        st.error(t["error_message"])  # Message d'erreur dynamique
 df_exploration = pd.read_csv(github_base_url + "df_github.csv")
 
 buffer = StringIO()
